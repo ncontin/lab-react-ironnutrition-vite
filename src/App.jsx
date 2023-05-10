@@ -1,34 +1,48 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import { useState } from "react";
+import reactLogo from "./assets/react.svg";
+import "./App.css";
+import FoodBox from "./components/FoodBox";
+import AddFoodForm from "./components/AddFoodForm";
+//import foods.json
+import foods from "./foods.json";
 
 function App() {
-  const [count, setCount] = useState(0)
+  //save foods in a state variable
+  const [foodList, setFoodList] = useState(foods);
+  const [search, setSearch] = useState("");
+  //ADD
+  const addNewFood = (newFood) => {
+    // Create a new array
+    const updatedFoodList = [...foodList, newFood];
 
+    setFoodList(updatedFoodList);
+  };
+
+  const handleSearch = (event) => {
+    setSearch(event.target.value);
+  };
+
+  const filteredFoodList = foodList.filter((food) => food.name.toLowerCase().includes(search.toLowerCase()));
+  //iteration 1
+  /*   return (
+    //map over the state variable and render a simple list that displays food names.
+    <div className="App">
+      {foodList.map((food) => (
+        <div key={`${food.name}-${food.image}`}>
+          <p> {food.name} </p>
+          <img src={food.image} width={100} />
+        </div>
+      ))}
+    </div>
+  ); */
   return (
     <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <AddFoodForm AddFoodForm={addNewFood} />
+      <input type="text" placeholder="Search" value={search} onChange={handleSearch} />
+      {filteredFoodList.map((food) => (
+        <FoodBox key={food.name} food={food} />
+      ))}
     </div>
-  )
+  );
 }
-
-export default App
+export default App;
